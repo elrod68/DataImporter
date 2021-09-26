@@ -32,6 +32,7 @@ namespace DataImporter.Core
             else return false;
         }
 
+        //delete all feed data records, so the table is ready for next import
         private async Task<bool> deleteAll()
         {
             try
@@ -60,6 +61,7 @@ namespace DataImporter.Core
 
                 if (deleteAll().Result == true)
                 {
+                    //compile a list of companies and their feeds
                     string SQLQ = "select * from feeds";
                     DataTable feeds = SQLServerDB.DatatableFromSQL(SQLQ, _connection);
 
@@ -76,6 +78,7 @@ namespace DataImporter.Core
                         {
                             int feedID = feedRow.Field<int>("FeedID");
                             Console.WriteLine($"Feed ID {feedID}");
+                            //import each feed using SQL Server Bulk Copy
                             Boolean resImport= await ImportFeed(companyID, feedID);
                             if (!resImport) return ImportResult.ImportFailed;
                         }
@@ -98,6 +101,7 @@ namespace DataImporter.Core
             const string destFeedTable = "Products";
             try
             {
+                //open csv file using streamReader and import it in FeedData table using SQL Server Bulk Copy for performance
                 string filePath = _basePath + $"Company_{companyID}" + @"\Feed_" + feedID + @"\Data.csv";
                 using (var reader = new StreamReader(filePath))
                 using (var csv = new CsvReader(reader, System.Globalization.CultureInfo.CreateSpecificCulture("en-GB")))
@@ -117,6 +121,7 @@ namespace DataImporter.Core
 
                         await bcp.WriteToServerAsync(dr);
 
+                        //after data has been imported move data to products table and delete FeedData records
                         var SQLQ = $"INSERT INTO {destFeedTable} SELECT {feedID},UniqueID,ProductName,ProductBrand,ProductDescription FROM FeedData DELETE FROM {rawFeedTable}";
                         await SQLServerDB.ExecuteSQLAsync(SQLQ, _connection);
                     }

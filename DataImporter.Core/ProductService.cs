@@ -40,9 +40,11 @@ namespace DataImporter.Core
                 //check for correct initialization
                 if (!ConfiguredOK()) return null;
 
-                string SQLQ = $"select * from VW_ProductsGeneral WHERE companyID={companyID} AND feedID={feedID}";
+                //use stored procedure for increased performance, retained companyID in query although it's redundant to be compatible with the requirements
+                string SQLQ = $"exec sps_Products {companyID},{feedID}";
                 DataTable dt = SQLServerDB.DatatableFromSQL(SQLQ, _connection);
 
+                //compile list from datatable
                 List<Product> productList = new List<Product>();
                 productList = (from DataRow dr in dt.Rows
                                select new Product()
