@@ -27,7 +27,7 @@ namespace DataImporter.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IProductService, ProductService>();
+            //add product service with connection string
             services.AddScoped<IProductService, ProductService>(serviceProvider =>
             {
                 return new ProductService(Configuration.GetConnectionString("MainDB"));
@@ -35,6 +35,7 @@ namespace DataImporter.Api
 
             services.AddControllers();
 
+            //swagger for debugging
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DataImporterAPI", Version = "v1" });
