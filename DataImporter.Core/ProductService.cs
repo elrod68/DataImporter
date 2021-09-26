@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace DataImporter.Core
 {
-    public class ProductService : IProductService
+    public class ProductService : IProductService, IDisposable
     {
         private string _connectionString;
         private SqlConnection _connection;
+
+        private bool isDisposed = false;
 
         public ProductService()
         { }
@@ -60,6 +62,16 @@ namespace DataImporter.Core
             {
                 ErrorsAndLog.HandleGenericError(ex);
                 return null;
+            }
+        }
+
+        public void Dispose()
+        {
+            {
+                if (this.isDisposed) return;
+
+                SQLServerDB.CloseConnection(_connection);
+                isDisposed = true;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace DataImporter.ConsoleApp
 {
     class Program
     {
-        public static string basePath = @"D:\temp\TestData\";
+        public static string basePath=@"D:\temp\TestData\";
 
         static async Task Main(string[] args)
         {
@@ -19,8 +19,9 @@ namespace DataImporter.ConsoleApp
               .AddJsonFile($"appsettings.json", true, true);
 
             var config = builder.Build();
-            var connectionString = config.GetConnectionString("MainDB");
+            string connectionString = config.GetConnectionString("MainDB");
             Console.WriteLine(connectionString);
+            Console.WriteLine(basePath);
 
             DataImporterService di = new DataImporterService(connectionString, basePath);
             ImportResult res=  await di.importAll();

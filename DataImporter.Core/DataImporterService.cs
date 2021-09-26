@@ -10,12 +10,14 @@ using System.Data.SqlClient;
 
 namespace DataImporter.Core
 {
-    public class DataImporterService : IDataImporterService
+    public class DataImporterService : IDataImporterService, IDisposable
     {
 
         private string _connectionString;
         private string _basePath;
         private SqlConnection _connection;
+
+        private bool isDisposed = false;
 
         public DataImporterService(string connectionString, string basePath)
         {
@@ -79,7 +81,7 @@ namespace DataImporter.Core
                             int feedID = feedRow.Field<int>("FeedID");
                             Console.WriteLine($"Feed ID {feedID}");
                             //import each feed using SQL Server Bulk Copy
-                            Boolean resImport= await ImportFeed(companyID, feedID);
+                            Boolean resImport = await ImportFeed(companyID, feedID);
                             if (!resImport) return ImportResult.ImportFailed;
                         }
                     }
@@ -134,6 +136,17 @@ namespace DataImporter.Core
             {
                 ErrorsAndLog.HandleGenericError(ex);
                 return false;
+            }
+        }
+
+
+        public void Dispose()
+        {
+            {
+                if (this.isDisposed) return;
+
+                SQLServerDB.CloseConnection(_connection);
+                isDisposed = true;
             }
         }
     }
