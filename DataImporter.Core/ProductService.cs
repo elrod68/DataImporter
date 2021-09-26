@@ -15,6 +15,9 @@ namespace DataImporter.Core
         private string _connectionString;
         private SqlConnection _connection;
 
+        public ProductService()
+        { }
+
         public ProductService(string connectionString)
         {
             _connectionString = connectionString;
