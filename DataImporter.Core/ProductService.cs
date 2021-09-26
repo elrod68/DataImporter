@@ -48,14 +48,19 @@ namespace DataImporter.Core
 
                 //compile list from datatable
                 List<Product> productList = new List<Product>();
-                productList = (from DataRow dr in dt.Rows
-                               select new Product()
-                               {
-                                   UniqueID = Convert.ToInt32(dr["UniqueID"]),
-                                   ProductName = dr["ProductName"].ToString(),
-                                   ProductBrand = dr["ProductBrand"].ToString(),
-                                   ProductDescription = dr["ProductDescription"].ToString()
-                               }).ToList();
+
+                if (dt.Rows.Count!=0)
+                {
+                    productList = (from DataRow dr in dt.Rows
+                                   select new Product()
+                                   {
+                                       UniqueID = Convert.ToInt32(dr["UniqueID"]),
+                                       ProductName = dr["ProductName"].ToString(),
+                                       ProductBrand = dr["ProductBrand"].ToString(),
+                                       ProductDescription = dr["ProductDescription"].ToString()
+                                   }).ToList();
+                }
+                
                 return productList;
             }
             catch (Exception ex)
