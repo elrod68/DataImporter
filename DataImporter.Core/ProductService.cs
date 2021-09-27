@@ -25,8 +25,7 @@ namespace DataImporter.Core
             _connectionString = connectionString;
 
             //open connection
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
+            _connection = SQLServerDB.GetConnection(connectionString);
         }
 
         private Boolean ConfiguredOK()
@@ -35,6 +34,7 @@ namespace DataImporter.Core
             else return false;
         }
 
+        //return a list of products for feedid, companyid
         public List<Product> GetProducts(int companyID, int feedID)
         {
             try

@@ -25,16 +25,17 @@ namespace DataImporter.Core
             _basePath = basePath;
 
             //open connection
-            _connection = new SqlConnection(connectionString);
-            _connection.Open();
+            _connection = SQLServerDB.GetConnection(connectionString);
         }
+
+        //returns true if service is properly configured
         private Boolean ConfiguredOK()
         {
             if ((_basePath != "") && (_connectionString != "") && (_connection != null)) return true;
             else return false;
         }
 
-        //delete all feed data records, so the table is ready for next import
+        //delete all feed data and product records, so the table is ready for next import
         private async Task<bool> deleteAll()
         {
             try
@@ -54,6 +55,7 @@ namespace DataImporter.Core
             }
         }
 
+        //main import routine, imports data for all feeds
         public async Task<ImportResult> importAll()
         {
             try
@@ -97,6 +99,7 @@ namespace DataImporter.Core
             }
         }
 
+        //import feed data for companyid, feedid using bcp
         private async Task<Boolean> ImportFeed(int companyID, int feedID)
         {
             const string rawFeedTable = "FeedData";

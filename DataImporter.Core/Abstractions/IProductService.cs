@@ -1,6 +1,5 @@
 ﻿using DataImporter.Core.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DataImporter.Core.Abstractions
 {

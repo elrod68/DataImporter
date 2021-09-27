@@ -6,8 +6,26 @@ using System.Threading.Tasks;
 
 namespace DataImporter.Core.Common
 {
+    //commonly used SQL Server routines
+
     static class SQLServerDB
     {
+
+        public static SqlConnection GetConnection(string connectionString)
+        {
+            try
+            {
+                SqlConnection _connection = new SqlConnection(connectionString);
+                _connection.Open();
+                return _connection;
+
+            }
+            catch (Exception ex)
+            {
+                ErrorsAndLog.HandleGenericError(ex);
+                return null;
+            }
+        }
 
         public static DataTable DatatableFromSQL(string SQLQ, SqlConnection sqlCon)
         {

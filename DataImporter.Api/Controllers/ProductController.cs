@@ -26,7 +26,7 @@ namespace DataImporter.Api.Controllers
             {
                 var products = _productService.GetProducts(CompanyID, FeedID);
                 if (products == null) return NotFound();
-                return Ok(products);
+                else return Ok(products);
             }
             catch (Exception ex)
             {
