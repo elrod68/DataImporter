@@ -31,6 +31,7 @@ namespace DataImporter.Core.Common
             }
         }
 
+        //just log a message in logger
         public static void LogMessage(string msg)
         {
             try
