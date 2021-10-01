@@ -17,6 +17,7 @@ namespace DataImporter.Api.Controllers
         {
             _logger = logger;
             _productService = productService;
+            _logger.LogDebug(1, "ProductController initialized");
         }
 
         [HttpGet("{CompanyID},{FeedID}")]
@@ -24,6 +25,8 @@ namespace DataImporter.Api.Controllers
         {
             try
             {
+                _logger.LogInformation($"Get Products for CompanyID {CompanyID} and FeedID {FeedID}");
+
                 var products = _productService.GetProducts(CompanyID, FeedID);
                 if (products == null) return NotFound();
                 if (products.Count==0) return NotFound();
